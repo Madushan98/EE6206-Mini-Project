@@ -3,10 +3,6 @@
 #include <string.h> // for manipulating arrays of characters.
 #include <errno.h>  // for error handling
 
-void createRecord();
-void writeOneRecord();
-void readAllRecords();
-
 typedef struct student_marks // structure definition for student marks
 {
     char student_index[20];
@@ -15,6 +11,13 @@ typedef struct student_marks // structure definition for student marks
     float project_marks;
     float finalExam_marks;
 } student_marks;
+
+void createRecord();
+void writeOneRecord();
+void readAllRecords();
+int getAllDataWithLength();
+
+student_marks *marksPtr;
 
 int main()
 {
@@ -140,4 +143,37 @@ void readAllRecords() // function to read all record on the student_marks file
     }
     printf("\n\n");
     fclose(file); // close file
+}
+
+
+int getAllDataWithLength()   // function to get the number of records in the file
+{
+    student_marks output;
+    FILE *file;
+    int wrt;
+    int errNo;
+    int count = 0;
+
+    marksPtr = (student_marks *)malloc(count * sizeof(struct student_marks));   // allocate memory for the structure
+
+    file = fopen("student_marks.dat", "r"); // open file for writing and reading
+    if (file == NULL)   // error handling 
+    {
+        perror("doc1.txt: ");
+        printf("Error No %d\n", errno);
+        exit(1);
+    }
+    printf("\n");
+    while (fread(&output, sizeof(struct student_marks), 1, file))  // read each record from file with error handling
+    {
+        count++;
+        marksPtr = (student_marks *)realloc(marksPtr, count * sizeof(struct student_marks)); // reallocate memory for the structure
+        strcpy((marksPtr + count - 1)->student_index, output.student_index);    // copy data to the structure
+        (marksPtr + count - 1)->assignmt01_marks = output.assignmt01_marks;
+        (marksPtr + count - 1)->assignmt02_marks = output.assignmt02_marks;
+        (marksPtr + count - 1)->project_marks = output.project_marks;
+        (marksPtr + count - 1)->finalExam_marks = output.finalExam_marks;
+    }
+    fclose(file);   //  close file
+    return count;
 }
