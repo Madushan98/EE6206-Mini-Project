@@ -2,8 +2,6 @@
 #include <stdlib.h> // for exit function
 #include <string.h> // for manipulating arrays of characters.
 #include <errno.h>  // for error handling
-void createRecord();
-
 
 typedef struct student_marks
 { // structure definition for student marks
@@ -13,6 +11,9 @@ typedef struct student_marks
     float project_marks;
     float finalExam_marks;
 } student_marks;
+
+void createRecord();
+void writeOneRecord();
 
 int main()
 {
@@ -60,17 +61,6 @@ int main()
 void createRecord()
 {
     student_marks input;
-    FILE *file;
-    int wrt;
-    int errNo;
-
-    file = fopen("student_marks.dat", "a"); // open file for writing and reading
-    if (file == NULL)
-    {
-        perror("doc1.txt: ");
-        printf("Error No %d\n", errno);
-        exit(1);
-    }
 
     printf("Enter student index number: ");
     scanf("%s", input.student_index);
@@ -83,7 +73,19 @@ void createRecord()
     printf("Enter finals marks : ");
     scanf("%f", &input.finalExam_marks);
 
-    wrt = fwrite(&input, sizeof(struct student_marks), 1, file);
+    writeOneRecord(input);
+}
+
+void writeOneRecord(student_marks data)
+{
+
+    FILE *file;
+    int wrt;
+    int errNo;
+
+    file = fopen("student_marks.dat", "a+");
+
+    wrt = fwrite(&data, sizeof(struct student_marks), 1, file);
 
     if (wrt < 0)
     {
@@ -91,11 +93,6 @@ void createRecord()
         printf("Error No: %d\n", errno);
         exit(1);
     }
-    else
-    {
-        printf("Successfully written to file\n");
-    }
 
     fclose(file);
 }
-
