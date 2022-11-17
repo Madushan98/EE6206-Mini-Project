@@ -3,17 +3,20 @@
 #include <string.h> // for manipulating arrays of characters.
 #include <errno.h>  // for error handling
 
-typedef struct student_marks
-{ // structure definition for student marks
+
+
+void createRecord();
+void writeOneRecord();
+void readAllRecords();
+
+typedef struct student_marks    // structure definition for student marks
+{ 
     char student_index[20];
     float assignmt01_marks;
     float assignmt02_marks;
     float project_marks;
     float finalExam_marks;
 } student_marks;
-
-void createRecord();
-void writeOneRecord();
 
 int main()
 {
@@ -39,6 +42,7 @@ int main()
             createRecord();
             break;
         case 2:
+            readAllRecords();
             break;
         case 3:
 
@@ -94,5 +98,33 @@ void writeOneRecord(student_marks data)
         exit(1);
     }
 
+    fclose(file);
+}
+
+void readAllRecords()
+{
+    student_marks output;
+    FILE *file;
+    int wrt;
+    int errNo;
+    char *row1[] = {"Student Index", "Assignment 01 Marks", "Assignment 02 Marks", "Project Marks", "Final Exam Marks"};
+
+    file = fopen("student_marks.dat", "r"); // open file for writing and reading
+    if (file == NULL)
+    {
+        perror("doc1.txt: ");
+        printf("Error No %d\n", errno);
+        exit(1);
+    }
+    printf("\n");
+
+    printf("| %*s | %*s | %*s | %*s | %*s | \n\n", -20, row1[0], -20, row1[1], -20, row1[2], -20, row1[3], -20, row1[4]);
+
+    while (fread(&output, sizeof(struct student_marks), 1, file))
+    {
+           printf("| %-20s | %-20.2f | %-20.2f | %-20.2f | %-20.2f  | \n", output.student_index, output.assignmt01_marks,
+               output.assignmt02_marks, output.project_marks, output.finalExam_marks);
+    }
+    printf("\n\n");
     fclose(file);
 }
