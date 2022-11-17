@@ -16,6 +16,10 @@ void createRecord();
 void writeOneRecord();
 void readAllRecords();
 int getAllDataWithLength();
+void updateRecord();
+int getAllDataWithLength();
+void reWriteList(int length);
+
 
 student_marks *marksPtr;
 
@@ -46,9 +50,9 @@ int main()
             readAllRecords();
             break;
         case 3:
-
             break;
         case 4:
+            updateRecord();
             break;
         case 5:
             exit(0);
@@ -126,9 +130,14 @@ void readAllRecords() // function to read all record on the student_marks file
 
     printf("| %*s | %*s | %*s | %*s | %*s | \n\n", -20, row1[0], -20, row1[1], -20, row1[2], -20, row1[3], -20, row1[4]);
 
-    while (!feof(file)) // read each record from file with error handling
+    while (1) // read each record from file with error handling
     {
+      
         fread(&output, sizeof(struct student_marks), 1, file);
+        if(feof(file))
+        {
+            break;
+        }
         if ((errNo = ferror(file)) > 0)
         {
             perror("fread dox1.txt: ");
@@ -176,4 +185,63 @@ int getAllDataWithLength()   // function to get the number of records in the fil
     }
     fclose(file);   //  close file
     return count;
+}
+
+void updateRecord() // function to update a record 
+{
+    int length = getAllDataWithLength(); // get the number of records in the file
+    char student_index[20]; 
+    printf("Enter student index number: ");
+    scanf("%s", student_index); // get the student index number to update
+    student_marks output;
+    student_marks updatedRecord;
+    int found = 0;
+    int count = 0;
+    while (count < length)  // loop through the list of data to find the matching record
+    {
+        if (strcmp(marksPtr[count].student_index, student_index) == 0)  // check if the stduent numbers match
+        {
+            found = 1;
+            printf("Enter assignment 01 marks : ");
+            scanf("%f", &(marksPtr + count)->assignmt01_marks);
+            printf("Enter assignment 02 marks : ");
+            scanf("%f", &(marksPtr + count)->assignmt02_marks);
+            printf("Enter project marks : ");
+            scanf("%f", &(marksPtr + count)->project_marks);
+            printf("Enter finals marks : ");
+            scanf("%f", &(marksPtr + count)->finalExam_marks);
+        }
+        count++;
+    }
+
+    if (found == 0) // check if the record was found 
+    {
+        printf("Record not found \n\n");
+    }
+    reWriteList(length);
+}
+
+
+void reWriteList(int length)    // function to rewrite the list of data to the file 
+{
+    FILE *file;
+    int wrt;
+    int errNo;
+    int count = 0;
+    file = fopen("student_marks.dat", "w+"); // open file for writing and reading
+    while (count < length)
+    {
+        wrt = fwrite(marksPtr + count, sizeof(struct student_marks), 1, file); // write one record to file
+        if (wrt < 0)
+        {
+            perror("fprintf doc1.txt: ");
+            printf("Error No: %d\n", errno);
+            exit(1);
+        }
+        count++;
+    }
+
+    printf("Successfully Updated\n\n"); // print success message
+
+    fclose(file);
 }
