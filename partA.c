@@ -19,6 +19,7 @@ int getAllDataWithLength();
 void updateRecord();
 int getAllDataWithLength();
 void reWriteList(int length);
+void deleteRecord();
 
 
 student_marks *marksPtr;
@@ -50,6 +51,7 @@ int main()
             readAllRecords();
             break;
         case 3:
+            deleteRecord();
             break;
         case 4:
             updateRecord();
@@ -244,4 +246,39 @@ void reWriteList(int length)    // function to rewrite the list of data to the f
     printf("Successfully Updated\n\n"); // print success message
 
     fclose(file);
+}
+
+void deleteRecord() // function to delete a student record 
+{
+    int length = getAllDataWithLength();    // get the number of records in the file
+    char student_index[20];
+    printf("Enter student index number: "); 
+    scanf("%s", student_index); // get the student index number to delete
+    student_marks output;
+    student_marks updatedRecord;
+    int found = 0;
+    int count = 0;
+    while (count < length)  // find the matching record by looping
+    {
+        if (strcmp(marksPtr[count].student_index, student_index) == 0)  // chack for matching student index number
+        {
+            found = 1;
+            for (int i = count; i < length - 1; i++)    // remove the record by shifting the list 
+            {
+                strcpy((marksPtr + i)->student_index, (marksPtr + i + 1)->student_index);
+                (marksPtr + i)->assignmt01_marks = (marksPtr + i + 1)->assignmt01_marks;
+                (marksPtr + i)->assignmt02_marks = (marksPtr + i + 1)->assignmt02_marks;
+                (marksPtr + i)->project_marks = (marksPtr + i + 1)->project_marks;
+                (marksPtr + i)->finalExam_marks = (marksPtr + i + 1)->finalExam_marks;
+            }
+            length--;   // reduce the length of the list
+        }
+        count++;
+    }
+
+    if (found == 0)     // handle record not found 
+    {
+        printf("Record not found \n\n");
+    }
+    reWriteList(length);    // rewrite the list to the file
 }
