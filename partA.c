@@ -20,7 +20,9 @@ void updateRecord();
 int getAllDataWithLength();
 void reWriteList(int length);
 void deleteRecord();
-
+void generateData();
+char *generateRandomIndex();
+float generateRandomMarks();
 
 student_marks *marksPtr;
 
@@ -37,7 +39,8 @@ int main()
         printf("2. Read all Record \n");
         printf("3. Delete Record \n");
         printf("4. Update Record \n");
-        printf("5. Exit \n\n");
+        printf("5. Generate 100 Records \n");
+        printf("6. Exit \n\n");
 
         printf("Enter Your Chice \n");
         scanf("%d", &choice);
@@ -57,6 +60,9 @@ int main()
             updateRecord();
             break;
         case 5:
+            generateData();
+            break;
+        case 6:
             exit(0);
             break;
         default:
@@ -281,4 +287,51 @@ void deleteRecord() // function to delete a student record
         printf("Record not found \n\n");
     }
     reWriteList(length);    // rewrite the list to the file
+}
+
+void generateData() // function to generate hundred records 
+{
+    student_marks dataList[100];    // create a list of 100 records
+    int count = 0;
+    while (count < 100)
+    {
+        // generate random data for each record
+        strcpy(dataList[count].student_index, generateRandomIndex());   
+        dataList[count].assignmt01_marks = generateRandomMarks();
+        dataList[count].assignmt02_marks = generateRandomMarks();   
+        dataList[count].project_marks = generateRandomMarks();
+        dataList[count].finalExam_marks = generateRandomMarks();
+        writeOneRecord(dataList[count]);
+        count++;
+    }
+
+    printf("Successfully generated 100 records\n\n");
+}
+
+char *generateRandomIndex() // generate random index number 
+{
+    const char charset[] = "1234567890"; // set of characters to use
+    char str1[] = "EG/2018/";   // add the prefix to the index number
+    char str2[4];
+    int num = 12;
+    for (int i = 0; i < num; i++)  
+    {
+        if (i < 8)
+        {
+            str2[i] = str1[i];  // add the prefix to the index number
+        }
+        else
+        {
+            int key = rand() % (int)(sizeof charset - 1);   // generate random number
+            str2[i] = charset[key];
+        }
+    }
+    char *returnStr = str2; // return the generated string
+    str2[num] = '\0';   // add null character to the end of the string
+    return returnStr;
+}
+
+float generateRandomMarks() // generate random marks
+{
+    return rand() % 100 + 1;    // generate random number between 1 and 100
 }
