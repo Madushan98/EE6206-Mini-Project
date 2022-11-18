@@ -64,7 +64,7 @@ void main()
     { // Child Process C1
         analize_marks data;
         analize_marks *childPtr1;
-        float minMarks = calculateMin(marksPtr, length);
+        float minMarks = calculateMin(marksPtr, length);    // calculate min marks
         childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
         if (childPtr1 == (void *)-1)
         {
@@ -100,8 +100,8 @@ void main()
             { // Child Process C2
                 analize_marks data;
                 analize_marks *childPtr1;
-                float maxMarks = calculateMax(length);
-                childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
+                float maxMarks = calculateMax(length); // calculate max marks
+                childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory
                 if (childPtr1 == (void *)-1)
                 {
                     perror("child shmat error: ");
@@ -126,7 +126,7 @@ void main()
                     analize_marks data;
                     analize_marks *childPtr1;
                     float average = calculateAverage(length); // calculate average
-                    childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
+                    childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory
                     if (childPtr1 == (void *)-1)
                     {
                         perror("child shmat error: ");
@@ -151,9 +151,9 @@ void main()
                     { // Child Process C4
                         analize_marks data;
                         analize_marks *childPtr1;
-                        float numofStudent = calculateNumOfStudent(length);
-                        childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
-                        if (childPtr1 == (void *)-1)
+                        float numofStudent = calculateNumOfStudent(length); // calculate number of students
+                        childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);  // attach shared memory
+                        if (childPtr1 == (void *)-1)    
                         {
                             perror("child shmat error: ");
                             printf("Error No: %d\n", errno);
