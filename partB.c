@@ -164,6 +164,31 @@ void main()
                     }
                     else
                     { // Parent Process
+                        analize_marks *parentPtr;   
+                        parentPtr = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);  // attach shared memory to parent process
+                        if (parentPtr == (void *)-1)
+                        {
+                            perror("parent shmat error: ");
+                            printf("Error No: %d\n", errno);
+                            exit(1);
+                        }
+                        // wait for all child processes to complete
+                        waitpid(PID1, NULL, 0);  
+                        waitpid(PID2, NULL, 0);
+                        waitpid(PID3, NULL, 0);
+                        waitpid(PID4, NULL, 0);
+
+                        // get average, min, max.average and number of students below 17.5% from shared memory
+                        float avearage = parentPtr->average;
+                        float maxMarks = parentPtr->max;
+                        float minMarks = parentPtr->min;
+                        int numofstudent_below = parentPtr->numofstudent_below;
+
+                        // print the results
+                        printf("Minimum marks : %.2f \n", minMarks);
+                        printf("Maximum marks : %.2f \n", maxMarks);
+                        printf("Average of the Records:  %.2f \n", avearage);
+                        printf("Number of students who got below 17.5%% marks: %d \n", numofstudent_below);
                     }
                 }
             }
@@ -249,4 +274,3 @@ float calculateAverage(int length) // function to calculate the average of the m
 
     return average;
 }
-
