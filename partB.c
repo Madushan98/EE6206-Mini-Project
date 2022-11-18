@@ -181,7 +181,7 @@ float calculateMin(student_marks *marksPtr, int length) // function to calculate
     int count = 0;
     while (count < length)
     {
-        if (minMarks > marksPtr[count].finalExam_marks)
+        if (minMarks > marksPtr[count].finalExam_marks) //  compare minmarks with final exam marks
         {
             minMarks = marksPtr[count].finalExam_marks;
         }
@@ -198,7 +198,7 @@ float calculateMax(int length) // function to calculate the maximum of the marks
     while (count < length)
     {
 
-        if (maxMarks < marksPtr[count].finalExam_marks)
+        if (maxMarks < marksPtr[count].finalExam_marks) // compare maxmarks with final exam marks
         {
             maxMarks = marksPtr[count].finalExam_marks;
         }
@@ -207,3 +207,20 @@ float calculateMax(int length) // function to calculate the maximum of the marks
 
     return maxMarks;
 }
+
+float calculateAverage(int length) // function to calculate the average of the marks
+{
+    float average = 0;
+    float totalMarks = 0;
+    int count = 0;
+    while (count < length)
+    {
+        totalMarks += marksPtr[count].finalExam_marks;  // add all the final exam marks
+        count++;
+    }
+    average = totalMarks / count;   // calculate the average
+
+    return average;
+}
+
+
