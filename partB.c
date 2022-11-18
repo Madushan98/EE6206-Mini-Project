@@ -26,9 +26,9 @@ typedef struct analize_marks // structure definition for analize_marks
 } analize_marks;
 
 int getAllDataWithLength();
-float calculateMin(student_marks *marksPtr, int length);
-float calculateMin(student_marks *marksPtr, int length);
+float calculateMin(int length);
 float calculateMax(int length);
+float calculateAverage(int length);
 int calculateNumOfStudent(int length);
 
 student_marks *marksPtr;
@@ -64,7 +64,7 @@ void main()
     { // Child Process C1
         analize_marks data;
         analize_marks *childPtr1;
-        float minMarks = calculateMin(marksPtr, length);    // calculate min marks
+        float minMarks = calculateMin(length);    // calculate min marks
         childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
         if (childPtr1 == (void *)-1)
         {
@@ -227,7 +227,7 @@ int getAllDataWithLength() // function to get the number of records in the file
     return count; // return the number of records
 }
 
-float calculateMin(student_marks *marksPtr, int length) // function to calculate the minimum of the marks
+float calculateMin( int length) // function to calculate the minimum of the marks
 {
     float minMarks = 100;
     int count = 0;
@@ -273,4 +273,23 @@ float calculateAverage(int length) // function to calculate the average of the m
     average = totalMarks / count; // calculate the average
 
     return average;
+}
+
+
+int calculateNumOfStudent(int length)   // function to calculate the number of students who got below 17.5% marks
+{
+    int count = 0;
+    int numofstudent_below = 0;
+
+    while (count < length)
+    {
+
+        if (marksPtr[count].finalExam_marks < 17.5) // compare final exam marks with 17.5
+        {
+            numofstudent_below++;
+        }
+        count++;
+    }
+
+    return numofstudent_below;
 }
