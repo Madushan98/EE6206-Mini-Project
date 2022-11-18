@@ -27,6 +27,9 @@ typedef struct analize_marks // structure definition for analize_marks
 
 int getAllDataWithLength();
 float calculateMin(student_marks *marksPtr, int length);
+float calculateMin(student_marks *marksPtr, int length);
+float calculateMax(int length);
+int calculateNumOfStudent(int length);
 
 student_marks *marksPtr;
 
@@ -120,6 +123,18 @@ void main()
                 }
                 else if (PID3 == 0)
                 { // Child Process C3
+                    analize_marks data;
+                    analize_marks *childPtr1;
+                    float average = calculateAverage(length);
+                    childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
+                    if (childPtr1 == (void *)-1)
+                    {
+                        perror("child shmat error: ");
+                        printf("Error No: %d\n", errno);
+                        exit(1);
+                    }
+
+                    childPtr1->average = average;
                 }
                 else
                 {
@@ -134,6 +149,18 @@ void main()
                     }
                     else if (PID4 == 0)
                     { // Child Process C4
+                        analize_marks data;
+                        analize_marks *childPtr1;
+                        float numofStudent = calculateNumOfStudent(length);
+                        childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
+                        if (childPtr1 == (void *)-1)
+                        {
+                            perror("child shmat error: ");
+                            printf("Error No: %d\n", errno);
+                            exit(1);
+                        }
+
+                        childPtr1->numofstudent_below = numofStudent;
                     }
                     else
                     { // Parent Process
@@ -215,12 +242,11 @@ float calculateAverage(int length) // function to calculate the average of the m
     int count = 0;
     while (count < length)
     {
-        totalMarks += marksPtr[count].finalExam_marks;  // add all the final exam marks
+        totalMarks += marksPtr[count].finalExam_marks; // add all the final exam marks
         count++;
     }
-    average = totalMarks / count;   // calculate the average
+    average = totalMarks / count; // calculate the average
 
     return average;
 }
-
 
