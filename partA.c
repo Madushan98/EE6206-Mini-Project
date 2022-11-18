@@ -123,7 +123,6 @@ void readAllRecords() // function to read all record on the student_marks file
 {
     student_marks output;
     FILE *file;
-    int wrt;
     int errNo;
     char *row1[] = {"Student Index", "Assignment 01 Marks", "Assignment 02 Marks", "Project Marks", "Final Exam Marks"};
 
@@ -140,9 +139,9 @@ void readAllRecords() // function to read all record on the student_marks file
 
     while (1) // read each record from file with error handling
     {
-      
+
         fread(&output, sizeof(struct student_marks), 1, file);
-        if(feof(file))
+        if (feof(file))
         {
             break;
         }
@@ -155,59 +154,56 @@ void readAllRecords() // function to read all record on the student_marks file
         else
         {
             printf("| %-20s | %-20.2f | %-20.2f | %-20.2f | %-20.2f  | \n", output.student_index, output.assignmt01_marks,
-                   output.assignmt02_marks, output.project_marks, output.finalExam_marks);              // print record
+                   output.assignmt02_marks, output.project_marks, output.finalExam_marks); // print record
         }
     }
     printf("\n\n");
     fclose(file); // close file
 }
 
-
-int getAllDataWithLength()   // function to get the number of records in the file
+int getAllDataWithLength() // function to get the number of records in the file
 {
     student_marks output;
     FILE *file;
-    int wrt;
-    int errNo;
     int count = 0;
 
-    marksPtr = (student_marks *)malloc(count * sizeof(struct student_marks));   // allocate memory for the structure
+    marksPtr = (student_marks *)malloc(count * sizeof(struct student_marks)); // allocate memory for the structure
 
     file = fopen("student_marks.dat", "r"); // open file for writing and reading
-    if (file == NULL)   // error handling 
+    if (file == NULL)                       // error handling
     {
         perror("doc1.txt: ");
         printf("Error No %d\n", errno);
         exit(1);
     }
     printf("\n");
-    while (fread(&output, sizeof(struct student_marks), 1, file))  // read each record from file with error handling
+    while (fread(&output, sizeof(struct student_marks), 1, file)) // read each record from file with error handling
     {
         count++;
         marksPtr = (student_marks *)realloc(marksPtr, count * sizeof(struct student_marks)); // reallocate memory for the structure
-        strcpy((marksPtr + count - 1)->student_index, output.student_index);    // copy data to the structure
+        strcpy((marksPtr + count - 1)->student_index, output.student_index);                 // copy data to the structure
         (marksPtr + count - 1)->assignmt01_marks = output.assignmt01_marks;
         (marksPtr + count - 1)->assignmt02_marks = output.assignmt02_marks;
         (marksPtr + count - 1)->project_marks = output.project_marks;
         (marksPtr + count - 1)->finalExam_marks = output.finalExam_marks;
     }
-    fclose(file);   //  close file
+    fclose(file); //  close file
     return count;
 }
 
-void updateRecord() // function to update a record 
+void updateRecord() // function to update a record
 {
     int length = getAllDataWithLength(); // get the number of records in the file
-    char student_index[20]; 
+    char student_index[20];
     printf("Enter student index number: ");
     scanf("%s", student_index); // get the student index number to update
     student_marks output;
     student_marks updatedRecord;
     int found = 0;
     int count = 0;
-    while (count < length)  // loop through the list of data to find the matching record
+    while (count < length) // loop through the list of data to find the matching record
     {
-        if (strcmp(marksPtr[count].student_index, student_index) == 0)  // check if the stduent numbers match
+        if (strcmp(marksPtr[count].student_index, student_index) == 0) // check if the stduent numbers match
         {
             found = 1;
             printf("Enter assignment 01 marks : ");
@@ -222,19 +218,20 @@ void updateRecord() // function to update a record
         count++;
     }
 
-    if (found == 0) // check if the record was found 
+    if (found == 0) // check if the record was found
     {
         printf("Record not found \n\n");
     }
-    reWriteList(length);
+    else
+    {
+        reWriteList(length); // rewrite the list to the file
+    }
 }
 
-
-void reWriteList(int length)    // function to rewrite the list of data to the file 
+void reWriteList(int length) // function to rewrite the list of data to the file
 {
     FILE *file;
     int wrt;
-    int errNo;
     int count = 0;
     file = fopen("student_marks.dat", "w+"); // open file for writing and reading
     while (count < length)
@@ -254,22 +251,22 @@ void reWriteList(int length)    // function to rewrite the list of data to the f
     fclose(file);
 }
 
-void deleteRecord() // function to delete a student record 
+void deleteRecord() // function to delete a student record
 {
-    int length = getAllDataWithLength();    // get the number of records in the file
+    int length = getAllDataWithLength(); // get the number of records in the file
     char student_index[20];
-    printf("Enter student index number: "); 
+    printf("Enter student index number: ");
     scanf("%s", student_index); // get the student index number to delete
     student_marks output;
     student_marks updatedRecord;
     int found = 0;
     int count = 0;
-    while (count < length)  // find the matching record by looping
+    while (count < length) // find the matching record by looping
     {
-        if (strcmp(marksPtr[count].student_index, student_index) == 0)  // chack for matching student index number
+        if (strcmp(marksPtr[count].student_index, student_index) == 0) // chack for matching student index number
         {
             found = 1;
-            for (int i = count; i < length - 1; i++)    // remove the record by shifting the list 
+            for (int i = count; i < length - 1; i++) // remove the record by shifting the list
             {
                 strcpy((marksPtr + i)->student_index, (marksPtr + i + 1)->student_index);
                 (marksPtr + i)->assignmt01_marks = (marksPtr + i + 1)->assignmt01_marks;
@@ -277,28 +274,31 @@ void deleteRecord() // function to delete a student record
                 (marksPtr + i)->project_marks = (marksPtr + i + 1)->project_marks;
                 (marksPtr + i)->finalExam_marks = (marksPtr + i + 1)->finalExam_marks;
             }
-            length--;   // reduce the length of the list
+            length--; // reduce the length of the list
         }
         count++;
     }
 
-    if (found == 0)     // handle record not found 
+    if (found == 0) // handle record not found
     {
         printf("Record not found \n\n");
     }
-    reWriteList(length);    // rewrite the list to the file
+    else
+    {
+        reWriteList(length); // rewrite the list to the file
+    }
 }
 
-void generateData() // function to generate hundred records 
+void generateData() // function to generate hundred records
 {
-    student_marks dataList[100];    // create a list of 100 records
+    student_marks dataList[100]; // create a list of 100 records
     int count = 0;
     while (count < 100)
     {
         // generate random data for each record
-        strcpy(dataList[count].student_index, generateRandomIndex());   
+        strcpy(dataList[count].student_index, generateRandomIndex());
         dataList[count].assignmt01_marks = generateRandomMarks();
-        dataList[count].assignmt02_marks = generateRandomMarks();   
+        dataList[count].assignmt02_marks = generateRandomMarks();
         dataList[count].project_marks = generateRandomMarks();
         dataList[count].finalExam_marks = generateRandomMarks();
         writeOneRecord(dataList[count]);
@@ -308,30 +308,30 @@ void generateData() // function to generate hundred records
     printf("Successfully generated 100 records\n\n");
 }
 
-char *generateRandomIndex() // generate random index number 
+char *generateRandomIndex() // generate random index number
 {
     const char charset[] = "1234567890"; // set of characters to use
-    char str1[] = "EG/2018/";   // add the prefix to the index number
+    char str1[] = "EG/2018/";            // add the prefix to the index number
     char str2[4];
     int num = 12;
-    for (int i = 0; i < num; i++)  
+    for (int i = 0; i < num; i++)
     {
         if (i < 8)
         {
-            str2[i] = str1[i];  // add the prefix to the index number
+            str2[i] = str1[i]; // add the prefix to the index number
         }
         else
         {
-            int key = rand() % (int)(sizeof charset - 1);   // generate random number
+            int key = rand() % (int)(sizeof charset - 1); // generate random number
             str2[i] = charset[key];
         }
     }
     char *returnStr = str2; // return the generated string
-    str2[num] = '\0';   // add null character to the end of the string
+    str2[num] = '\0';       // add null character to the end of the string
     return returnStr;
 }
 
 float generateRandomMarks() // generate random marks
 {
-    return rand() % 100 + 1;    // generate random number between 1 and 100
+    return rand() % 100 + 1; // generate random number between 1 and 100
 }
