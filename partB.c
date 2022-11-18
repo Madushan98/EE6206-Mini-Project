@@ -25,9 +25,11 @@ typedef struct analize_marks // structure definition for analize_marks
     int numofstudent_below;
 } analize_marks;
 
+
+
 void main()
 {
-    key_t ky = ftok("file.txt", 78); // create a key for shared memory
+      key_t ky = ftok("file.txt", 78); // create a key for shared memory
     if (ky == -1)
     {
         perror("ftok error: ");
@@ -52,11 +54,12 @@ void main()
     }
     else if (PID1 == 0)
     { // Child Process C1
+      
     }
     else
     {
 
-        pid_t PID2 = fork(); // create child process 2
+        pid_t PID2 = fork();    // create child process 2
 
         if (PID2 == -1)
         {
@@ -66,10 +69,11 @@ void main()
         }
         else if (PID2 == 0)
         { // Child Process C2
+           
         }
         else
         {
-            pid_t PID3 = fork(); // create child process 3
+            pid_t PID3 = fork();    // create child process 3
 
             if (PID3 == -1)
             {
@@ -79,11 +83,13 @@ void main()
             }
             else if (PID3 == 0)
             { // Child Process C3
+
+               
             }
             else
             {
 
-                pid_t PID4 = fork(); // create child process 4
+                pid_t PID4 = fork();    // create child process 4
 
                 if (PID4 == -1)
                 {
@@ -93,9 +99,12 @@ void main()
                 }
                 else if (PID4 == 0)
                 { // Child Process C4
+                   
                 }
                 else
                 { // Parent Process
+
+                
                 }
             }
         }
