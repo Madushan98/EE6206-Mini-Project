@@ -73,7 +73,7 @@ void main()
             exit(1);
         }
 
-        childPtr1->min = minMarks;
+        childPtr1->min = minMarks; // store min marks in shared memory
     }
     else
     {
@@ -109,7 +109,7 @@ void main()
                     exit(1);
                 }
 
-                childPtr1->max = maxMarks;
+                childPtr1->max = maxMarks; // write max marks to shared memory
             }
             else
             {
@@ -125,7 +125,7 @@ void main()
                 { // Child Process C3
                     analize_marks data;
                     analize_marks *childPtr1;
-                    float average = calculateAverage(length);
+                    float average = calculateAverage(length); // calculate average
                     childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
                     if (childPtr1 == (void *)-1)
                     {
@@ -134,7 +134,7 @@ void main()
                         exit(1);
                     }
 
-                    childPtr1->average = average;
+                    childPtr1->average = average; // store average in shared memory
                 }
                 else
                 {
@@ -164,8 +164,8 @@ void main()
                     }
                     else
                     { // Parent Process
-                        analize_marks *parentPtr;   
-                        parentPtr = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);  // attach shared memory to parent process
+                        analize_marks *parentPtr;
+                        parentPtr = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory to parent process
                         if (parentPtr == (void *)-1)
                         {
                             perror("parent shmat error: ");
@@ -173,7 +173,7 @@ void main()
                             exit(1);
                         }
                         // wait for all child processes to complete
-                        waitpid(PID1, NULL, 0);  
+                        waitpid(PID1, NULL, 0);
                         waitpid(PID2, NULL, 0);
                         waitpid(PID3, NULL, 0);
                         waitpid(PID4, NULL, 0);
