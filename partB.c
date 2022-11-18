@@ -146,64 +146,64 @@ void main()
 
 int getAllDataWithLength() // function to get the number of records in the file
 {
-        student_marks output;
-        FILE *file;
-        int count = 0;
+    student_marks output;
+    FILE *file;
+    int count = 0;
 
-        marksPtr = (student_marks *)malloc(count * sizeof(struct student_marks)); // allocate memory for the structure
+    marksPtr = (student_marks *)malloc(count * sizeof(struct student_marks)); // allocate memory for the structure
 
-        file = fopen("student_marks.dat", "r"); // open file for writing and reading
-        if (file == NULL)                       // error handling
-        {
-            perror("doc1.txt: ");
-            printf("Error No %d\n", errno);
-            exit(1);
-        }
-        printf("\n");
-        while (fread(&output, sizeof(struct student_marks), 1, file)) // read each record from file with error handling
-        {
-            count++;
-            marksPtr = (student_marks *)realloc(marksPtr, count * sizeof(struct student_marks)); // reallocate memory for the structure
-            strcpy((marksPtr + count - 1)->student_index, output.student_index);                 // copy data to the structure
-            (marksPtr + count - 1)->assignmt01_marks = output.assignmt01_marks;
-            (marksPtr + count - 1)->assignmt02_marks = output.assignmt02_marks;
-            (marksPtr + count - 1)->project_marks = output.project_marks;
-            (marksPtr + count - 1)->finalExam_marks = output.finalExam_marks;
-        }
-
-        fclose(file); //  close file
-        return count; // return the number of records
-    }
-
-    float calculateMin(student_marks * marksPtr, int length) // function to calculate the minimum of the marks
+    file = fopen("student_marks.dat", "r"); // open file for writing and reading
+    if (file == NULL)                       // error handling
     {
-        float minMarks = 100;
-        int count = 0;
-        while (count < length)
-        {
-            if (minMarks > marksPtr[count].finalExam_marks)
-            {
-                minMarks = marksPtr[count].finalExam_marks;
-            }
-            count++;
-        }
-
-        return minMarks;
+        perror("doc1.txt: ");
+        printf("Error No %d\n", errno);
+        exit(1);
     }
-
-    float calculateMax(int length) // function to calculate the maximum of the marks
+    printf("\n");
+    while (fread(&output, sizeof(struct student_marks), 1, file)) // read each record from file with error handling
     {
-        float maxMarks = 0;
-        int count = 0;
-        while (count < length)
-        {
-
-            if (maxMarks < marksPtr[count].finalExam_marks)
-            {
-                maxMarks = marksPtr[count].finalExam_marks;
-            }
-            count++;
-        }
-
-        return maxMarks;
+        count++;
+        marksPtr = (student_marks *)realloc(marksPtr, count * sizeof(struct student_marks)); // reallocate memory for the structure
+        strcpy((marksPtr + count - 1)->student_index, output.student_index);                 // copy data to the structure
+        (marksPtr + count - 1)->assignmt01_marks = output.assignmt01_marks;
+        (marksPtr + count - 1)->assignmt02_marks = output.assignmt02_marks;
+        (marksPtr + count - 1)->project_marks = output.project_marks;
+        (marksPtr + count - 1)->finalExam_marks = output.finalExam_marks;
     }
+
+    fclose(file); //  close file
+    return count; // return the number of records
+}
+
+float calculateMin(student_marks *marksPtr, int length) // function to calculate the minimum of the marks
+{
+    float minMarks = 100;
+    int count = 0;
+    while (count < length)
+    {
+        if (minMarks > marksPtr[count].finalExam_marks)
+        {
+            minMarks = marksPtr[count].finalExam_marks;
+        }
+        count++;
+    }
+
+    return minMarks;
+}
+
+float calculateMax(int length) // function to calculate the maximum of the marks
+{
+    float maxMarks = 0;
+    int count = 0;
+    while (count < length)
+    {
+
+        if (maxMarks < marksPtr[count].finalExam_marks)
+        {
+            maxMarks = marksPtr[count].finalExam_marks;
+        }
+        count++;
+    }
+
+    return maxMarks;
+}
