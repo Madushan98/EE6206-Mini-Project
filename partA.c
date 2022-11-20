@@ -296,11 +296,11 @@ void generateData() // function to generate hundred records
     while (count < 100)
     {
         // generate random data for each record
-        strcpy(dataList[count].student_index, generateRandomIndex());
-        dataList[count].assignmt01_marks = generateRandomMarks(15);
-        dataList[count].assignmt02_marks = generateRandomMarks(15);
-        dataList[count].project_marks = generateRandomMarks(20);
-        dataList[count].finalExam_marks = generateRandomMarks(50);
+        strcpy(dataList[count].student_index, generateRandomIndex()); // generate random student index number
+        dataList[count].assignmt01_marks = generateRandomMarks(15); // limit 15 %
+        dataList[count].assignmt02_marks = generateRandomMarks(15); // limit 15 %
+        dataList[count].project_marks = generateRandomMarks(20);    // limit 20 %
+        dataList[count].finalExam_marks = generateRandomMarks(50);  // limit 50 %
         writeOneRecord(dataList[count]);
         count++;
     }
