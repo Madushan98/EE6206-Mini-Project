@@ -33,7 +33,7 @@ int calculateNumOfStudent(int length);
 
 student_marks *marksPtr;
 
-void main()
+int main()
 {
     int length = getAllDataWithLength(); // get all records and length of records from file
 
@@ -64,7 +64,7 @@ void main()
     { // Child Process C1
         analize_marks data;
         analize_marks *childPtr1;
-        float minMarks = calculateMin(length);    // calculate min marks
+        float minMarks = calculateMin(length); // calculate min marks
         childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);
         if (childPtr1 == (void *)-1)
         {
@@ -74,6 +74,14 @@ void main()
         }
 
         childPtr1->min = minMarks; // store min marks in shared memory
+
+        int det = shmdt(childPtr1); // detach shared memory
+        if (det == -1)
+        {
+            perror("shmdt error: ");
+            printf("Error No: %d\n", errno);
+            exit(1);
+        }
     }
     else
     {
@@ -100,7 +108,7 @@ void main()
             { // Child Process C2
                 analize_marks data;
                 analize_marks *childPtr1;
-                float maxMarks = calculateMax(length); // calculate max marks
+                float maxMarks = calculateMax(length);                         // calculate max marks
                 childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory
                 if (childPtr1 == (void *)-1)
                 {
@@ -110,6 +118,14 @@ void main()
                 }
 
                 childPtr1->max = maxMarks; // write max marks to shared memory
+
+                int det = shmdt(childPtr1); // detach shared memory
+                if (det == -1)
+                {
+                    perror("shmdt error: ");
+                    printf("Error No: %d\n", errno);
+                    exit(1);
+                }
             }
             else
             {
@@ -125,7 +141,7 @@ void main()
                 { // Child Process C3
                     analize_marks data;
                     analize_marks *childPtr1;
-                    float average = calculateAverage(length); // calculate average
+                    float average = calculateAverage(length);                      // calculate average
                     childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory
                     if (childPtr1 == (void *)-1)
                     {
@@ -135,6 +151,14 @@ void main()
                     }
 
                     childPtr1->average = average; // store average in shared memory
+
+                    int det = shmdt(childPtr1); // detach shared memory
+                    if (det == -1)
+                    {
+                        perror("shmdt error: ");
+                        printf("Error No: %d\n", errno);
+                        exit(1);
+                    }
                 }
                 else
                 {
@@ -151,9 +175,9 @@ void main()
                     { // Child Process C4
                         analize_marks data;
                         analize_marks *childPtr1;
-                        float numofStudent = calculateNumOfStudent(length); // calculate number of students
-                        childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W);  // attach shared memory
-                        if (childPtr1 == (void *)-1)    
+                        float numofStudent = calculateNumOfStudent(length);            // calculate number of students
+                        childPtr1 = (analize_marks *)shmat(SMID, NULL, SHM_R | SHM_W); // attach shared memory
+                        if (childPtr1 == (void *)-1)
                         {
                             perror("child shmat error: ");
                             printf("Error No: %d\n", errno);
@@ -161,6 +185,14 @@ void main()
                         }
 
                         childPtr1->numofstudent_below = numofStudent;
+
+                        int det = shmdt(childPtr1); // detach shared memory
+                        if (det == -1)
+                        {
+                            perror("shmdt error: ");
+                            printf("Error No: %d\n", errno);
+                            exit(1);
+                        }
                     }
                     else
                     { // Parent Process
@@ -185,15 +217,35 @@ void main()
                         int numofstudent_below = parentPtr->numofstudent_below;
 
                         // print the results
-                        printf("Minimum marks : %.2f \n", minMarks);
+                        printf("\nMinimum marks : %.2f \n", minMarks);
                         printf("Maximum marks : %.2f \n", maxMarks);
                         printf("Average of the Records:  %.2f \n", avearage);
                         printf("Number of students who got below 17.5%% marks: %d \n", numofstudent_below);
+
+                        int det = shmdt(parentPtr); // detach shared memory
+                        if (det == -1)
+                        {
+                            perror("shmdt error: ");
+                            printf("Error No: %d\n", errno);
+                            exit(1);
+                        }
+
+                        int del = shmctl(SMID, IPC_RMID, NULL); // delete shared memory
+
+                        if(del == -1)
+                        {
+                            perror("shmctl error: ");
+                            printf("Error No: %d\n", errno);
+                            exit(1);
+                        }
                     }
                 }
             }
         }
     }
+
+    return 0;
+
 }
 
 int getAllDataWithLength() // function to get the number of records in the file
@@ -227,7 +279,7 @@ int getAllDataWithLength() // function to get the number of records in the file
     return count; // return the number of records
 }
 
-float calculateMin( int length) // function to calculate the minimum of the marks
+float calculateMin(int length) // function to calculate the minimum of the marks
 {
     float minMarks = 100;
     int count = 0;
@@ -275,8 +327,7 @@ float calculateAverage(int length) // function to calculate the average of the m
     return average;
 }
 
-
-int calculateNumOfStudent(int length)   // function to calculate the number of students who got below 17.5% marks
+int calculateNumOfStudent(int length) // function to calculate the number of students who got below 17.5% marks
 {
     int count = 0;
     int numofstudent_below = 0;
