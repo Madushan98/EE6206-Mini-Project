@@ -5,9 +5,9 @@
 
 typedef struct student_marks // structure definition for student marks
 {
-    char student_index[20]; 
-    float assignmt01_marks; 
-    float assignmt02_marks; 
+    char student_index[20];
+    float assignmt01_marks;
+    float assignmt02_marks;
     float project_marks;
     float finalExam_marks;
 } student_marks;
@@ -297,10 +297,10 @@ void generateData() // function to generate hundred records
     {
         // generate random data for each record
         strcpy(dataList[count].student_index, generateRandomIndex()); // generate random student index number
-        dataList[count].assignmt01_marks = generateRandomMarks(15); // limit 15 %
-        dataList[count].assignmt02_marks = generateRandomMarks(15); // limit 15 %
-        dataList[count].project_marks = generateRandomMarks(20);    // limit 20 %
-        dataList[count].finalExam_marks = generateRandomMarks(50);  // limit 50 %
+        dataList[count].assignmt01_marks = generateRandomMarks(15);   // limit 15 %
+        dataList[count].assignmt02_marks = generateRandomMarks(15);   // limit 15 %
+        dataList[count].project_marks = generateRandomMarks(20);      // limit 20 %
+        dataList[count].finalExam_marks = generateRandomMarks(50);    // limit 50 %
         writeOneRecord(dataList[count]);
         count++;
     }
@@ -333,6 +333,6 @@ char *generateRandomIndex() // generate random index number
 
 float generateRandomMarks(int limit) // generate random marks
 {
-    float random = ((float)rand()/RAND_MAX)*(float)(limit); // generate random floating point number between 1 and limit
-    return random; 
+    float random = ((float)rand() / RAND_MAX) * (float)(limit); // generate random floating point number between 1 and limit
+    return random;
 }

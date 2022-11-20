@@ -333,9 +333,10 @@ int calculateNumOfStudent(int length) // function to calculate the number of stu
     int numofstudent_below = 0;
 
     while (count < length)
-    {
+    {   
+    
 
-        if (marksPtr[count].finalExam_marks < 17.5) // compare final exam marks with 17.5
+        if ((marksPtr[count].finalExam_marks*2) < 17.5) // compare final exam marks with 17.5%
         {
             numofstudent_below++;
         }
