@@ -5,9 +5,9 @@
 
 typedef struct student_marks // structure definition for student marks
 {
-    char student_index[20];
-    float assignmt01_marks;
-    float assignmt02_marks;
+    char student_index[20]; 
+    float assignmt01_marks; 
+    float assignmt02_marks; 
     float project_marks;
     float finalExam_marks;
 } student_marks;
@@ -22,7 +22,7 @@ void reWriteList(int length);
 void deleteRecord();
 void generateData();
 char *generateRandomIndex();
-float generateRandomMarks();
+float generateRandomMarks(int limit);
 
 student_marks *marksPtr;
 
@@ -135,7 +135,7 @@ void readAllRecords() // function to read all record on the student_marks file
     }
     printf("\n");
 
-    printf("| %*s | %*s | %*s | %*s | %*s | \n\n", -20, row1[0], -20, row1[1], -20, row1[2], -20, row1[3], -20, row1[4]);
+    printf("| %*s | %*s | %*s | %*s | %*s  | \n\n", -20, row1[0], -20, row1[1], -20, row1[2], -20, row1[3], -20, row1[4]);
 
     while (1) // read each record from file with error handling
     {
@@ -297,10 +297,10 @@ void generateData() // function to generate hundred records
     {
         // generate random data for each record
         strcpy(dataList[count].student_index, generateRandomIndex());
-        dataList[count].assignmt01_marks = generateRandomMarks();
-        dataList[count].assignmt02_marks = generateRandomMarks();
-        dataList[count].project_marks = generateRandomMarks();
-        dataList[count].finalExam_marks = generateRandomMarks();
+        dataList[count].assignmt01_marks = generateRandomMarks(15);
+        dataList[count].assignmt02_marks = generateRandomMarks(15);
+        dataList[count].project_marks = generateRandomMarks(20);
+        dataList[count].finalExam_marks = generateRandomMarks(50);
         writeOneRecord(dataList[count]);
         count++;
     }
@@ -331,7 +331,8 @@ char *generateRandomIndex() // generate random index number
     return returnStr;
 }
 
-float generateRandomMarks() // generate random marks
+float generateRandomMarks(int limit) // generate random marks
 {
-    return rand() % 100 + 1; // generate random number between 1 and 100
+    float random = ((float)rand()/RAND_MAX)*(float)(limit); // generate random floating point number between 1 and limit
+    return random; 
 }
